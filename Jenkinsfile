@@ -27,7 +27,7 @@ pipeline {
     post {
     always {
         // Publish test results using the junit step
-         // Specify the path to the XML test result files
+        junit 'test_report.xml'
     }
 }
 }
