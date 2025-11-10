@@ -2,32 +2,25 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
-            steps {
-                git url: 'add here your url', credentialsId: 'add credentialsId'
-            }
-        }
-        
         stage('Build') {
             steps {
-                // Крок для збірки проекту з Visual Studio
-                // Встановіть правильні шляхи до рішення/проекту та параметри MSBuild
-                bat '"path to MSBuild" test_repos.sln /t:Build /p:Configuration=Release'
+                // ВАЖЛИВО: Перевірте, чи цей шлях до MSBuild правильний на ВАШОМУ комп'ютері!
+                // Якщо не працює, знайдіть де у вас лежить MSBuild.exe і вставте сюди повний шлях.
+                bat '"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe" test_repos.sln /t:Build /p:Configuration=Debug /p:Platform=x64'
             }
         }
 
         stage('Test') {
             steps {
-                // Команди для запуску тестів
+                // Запуск тестів. Переконайтеся, що шлях до exe файлу правильний відносно кореня репозиторію.
                 bat "x64\\Debug\\test_repos.exe --gtest_output=xml:test_report.xml"
             }
         }
     }
 
     post {
-    always {
-        // Publish test results using the junit step
-        junit 'test_report.xml'
+        always {
+            junit 'test_report.xml'
+        }
     }
-}
 }
