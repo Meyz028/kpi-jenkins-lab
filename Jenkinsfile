@@ -1,25 +1,27 @@
 pipeline {
     agent any
 
-    stages {
+    stages {  // <-- Цей блок був пропущений
         stage('Build') {
             steps {
-                // ВАЖЛИВО: Перевірте, чи цей шлях до MSBuild правильний на ВАШОМУ комп'ютері!
-                // Якщо не працює, знайдіть де у вас лежить MSBuild.exe і вставте сюди повний шлях.
-                bat '"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe" test_repos.sln /t:Build /p:Configuration=Debug /p:Platform=x64'
+                // ВАЖЛИВО: Переконайтеся, що шлях правильний саме для ВАШОГО комп'ютера!
+                // Ми використовуємо 'call' для стабільності запуску bat-файлів у Jenkins.
+                bat 'call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\MSBuild\\Current\\Bin\\MSBuild.exe" test_repos.sln /t:Build /p:Configuration=Debug /p:Platform=x64'
             }
         }
 
         stage('Test') {
             steps {
-                // Запуск тестів. Переконайтеся, що шлях до exe файлу правильний відносно кореня репозиторію.
-                bat "x64\\Debug\\test_repos.exe --gtest_output=xml:test_report.xml"
+                // Запуск скомпільованого exe-файлу тестів.
+                // 'call' також тут не завадить для надійності.
+                bat 'call x64\\Debug\\test_repos.exe --gtest_output=xml:test_report.xml'
             }
         }
     }
 
     post {
         always {
+            // Цей крок збере звіт про тестування (JUnit format), навіть якщо тести впадуть.
             junit 'test_report.xml'
         }
     }
