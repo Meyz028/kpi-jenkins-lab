@@ -3,12 +3,15 @@ pipeline {
 
     stages {  // <-- Цей блок був пропущений
         stage('Build') {
+// ... всередині stage('Build')
             steps {
-                // ВАЖЛИВО: Переконайтеся, що шлях правильний саме для ВАШОГО комп'ютера!
-                // Ми використовуємо 'call' для стабільності запуску bat-файлів у Jenkins.
-                bat 'call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\MSBuild\\Current\\Bin\\MSBuild.exe" test_repos.sln /t:Build /p:Configuration=Debug /p:Platform=x64'
+                // СТАРИЙ РЯДОК:
+                // bat 'call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\MSBuild\\Current\\Bin\\MSBuild.exe" test_repos.sln /t:Build /p:Configuration=Debug /p:Platform=x64'
+                
+                // НОВИЙ РЯДОК (з /restore):
+                bat 'call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\MSBuild\\Current\\Bin\\MSBuild.exe" test_repos.sln /restore /t:Build /p:Configuration=Debug /p:Platform=x64'
             }
-        }
+// ...
 
         stage('Test') {
             steps {
