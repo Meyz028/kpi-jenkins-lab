@@ -1,7 +1,19 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
-    "configurations": []
+    "configurations": [
+        {
+            "name": "(Windows) Debug Test", // Ваша назва може бути іншою
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/x64/Debug/test_repos.exe", // <-- ВАЖЛИВО: Перевірте цей шлях!
+            "args": [
+                "--gtest_output=xml:test_report.xml"
+            ],
+            "cwd": "${workspaceFolder}", // Вказує, де буде створено звіт
+            "stopAtEntry": false,
+            "environment": [],
+            "console": "internalConsole"
+        }
+        // ...можуть бути інші конфігурації...
+    ]
 }
