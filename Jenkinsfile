@@ -1,27 +1,33 @@
 pipeline {
     agent any
 
-    stages { // <--- 1-ша ВІДКРИТА
+    stages {
+        stage('Checkout') {
+            steps {
+                git url: 'add here your url', credentialsId: 'add credentialsId'
+            }
+        }
         
-        stage('Build') { // <--- 2-га ВІДКРИТА
-            steps { // <--- 3-тя ВІДКРИТА
-                // Ваша команда 'bat' з /restore
-                bat 'call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\MSBuild\\Current\\Bin\\MSBuild.exe" test_repos.sln /restore /t:Build /p:Configuration=Debug /p:Platform=x64'
-            } // <--- 3-тя ЗАКРИТА
-        } // <--- 2-га ЗАКРИТА
+        stage('Build') {
+            steps {
+                // Крок для збірки проекту з Visual Studio
+                // Встановіть правильні шляхи до рішення/проекту та параметри MSBuild
+                bat '"path to MSBuild" test_repos.sln /t:Build /p:Configuration=Release'
+            }
+        }
 
-        stage('Test') { // <--- 4-та ВІДКРИТА
-            steps { // <--- 5-та ВІДКРИТА
-                bat 'call x64\\Debug\\test_repos.exe --gtest_output=xml:test_report.xml'
-            } // <--- 5-та ЗАКРИТА
-        } // <--- 4-та ЗАКРИТА
+        stage('Test') {
+            steps {
+                // Команди для запуску тестів
+                bat "x64\\Debug\\test_repos.exe --gtest_output=xml:test_report.xml"
+            }
+        }
+    }
 
-    } // <--- 1-ша ЗАКРИТА (можливо, її і не вистачає)
-
-    post { // <--- 6-та ВІДКРИТА
-        always { // <--- 7-ма ВІДКРИТА
-            junit 'test_report.xml'
-        } // <--- 7-ма ЗАКРИТА
-    } // <--- 6-та ЗАКРИТА
-
-} // <--- ОСНОВНА ЗАКРИТА (або, можливо, не вистачає цієї)
+    post {
+    always {
+        // Publish test results using the junit step
+         // Specify the path to the XML test result files
+    }
+}
+}
